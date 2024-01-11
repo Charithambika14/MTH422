@@ -83,3 +83,10 @@ c <- 1/(a*b)
 
 #(10)
 c <- 1/integral2(function(x,y){-x^4 + x^2*y^2 -y^4},xmin=-50,xmax=50,ymiin=-50,ymax=50)$Q
+c = 0.26
+
+c <- 1/integral2(function(x,y){-x^4 + x^2*y^2 -y^4},xmin=-25,xmax=25,ymiin=-25,ymax=25)$Q
+c = 0.26
+
+c <- 1/integral2(function(x,y){-x^4 + x^2*y^2 -y^4},xmin=-500,xmax=500,ymiin=-500,ymax=500)$Q
+c = Inf 
