@@ -52,5 +52,22 @@ x <- matrix(runif(10000),5000,2)
 plot(x)
 
 #(7)
-pi <- 3.14
+count <- 0
+y < NULL
+while(count < 5000)
+{
+  x <- runif(2,-1,1)
+  if(sum(x^2) <= 1)
+  {
+    y <- rbind(y,x)
+    count <- count + 1 
+  }
+}
+plot(x,y)
 
+# another solution
+radius <- runif(5000,0,1)
+theta <- 2*pi*runif(5000,0,1)
+x <- sqrt(radius)*cos(theta)
+y <- sqrt(radius)*sin(theta)
+plot(x,y)
