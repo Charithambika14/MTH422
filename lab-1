@@ -1,0 +1,56 @@
+# in assignment DO METHOD ALL THE NAME IN () too
+
+#(1)
+d1 <- rbinom(n=50,size=1,prob=0.6)
+d2 <- rbinom(n=50,size=10,prob=0.6)
+d3 <- rpois(n=50,lambda=1.5)
+d4 <- rnorm(n=50,mean=0,sd=2)
+d5 <- runif(n=50,min=-2,max=2)
+d6 <- rbeta(n=50,shape1=2,shape2=1)
+d7 <- rgamma(n=50,shape=2,rate=0.5) # or rgamma(n=50,shape=2,scale=2)
+d8 <- 1/rgamma(n=50,shape=2,rate=0.5)
+
+
+#(2)
+# draw a random sample from u(0,1) and compare with the funcion
+# x < 0.2 ==> 1
+# 0.2< x < 0.6 ==> 2
+# 0.6 < x < 0.9 ==> 3
+# x > 0.9 ==> 4
+
+x <- runif(50,0,1)
+y <- rep(NA,50)
+y[x < 0.2] <- 1
+y[(x <= 0.6) & (x > 0.2)] <- 2
+y[(x <= 0.9) & (x > 0.6)] <- 3
+y[x > 0.9] <- 4
+
+
+#(3)
+x2 <- rbinom(50,1,0.6)
+y <- sapply(x2,function(xx){ ifelse(xx==0, rgamma(1,2,0.5), 1/rgamma(1,2,0.5))})
+cbind(x2,y)
+
+# other solution
+y <- rep(NA,50)
+x <- rbinom(50,1,0.6)
+z <- rgamma(50,2,0.5)
+y <- z^(1-2*x)
+cbind(x,y)
+
+#(4)
+y <- rbeta(50,2,4)
+x <- rbinom(50,10,y)  # x ~ beta-binomial(10,2,4)
+
+#(5)
+library(mvtnorm)
+rmvnorm(n=50,mean=c(2,2),sigma=matrix(c(1,0.5,0.5,1),2,2))
+
+
+#(6)
+x <- matrix(runif(10000),5000,2)
+plot(x)
+
+#(7)
+pi <- 3.14
+
