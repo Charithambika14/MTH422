@@ -1,0 +1,46 @@
+#---
+#title: "Bernoulli-Beta"
+#author: "Arnab Hazra"
+#date: "2024-01-19"
+#output: html_document
+#---
+  
+#```{r, echo=TRUE}
+
+rm(list = ls())
+
+n <- 10
+theta0 <- 0.4
+
+set.seed(100)
+
+Y <- rbinom(n, size = 1, prob = theta0) # simulated data
+
+# prior: Beta(2, 4)
+a <- 2
+b <- 4
+
+# analytical solution
+theta <- rbeta(n,a+sum(Y),n-sum(Y)+b)
+
+# fill with theoretical posterior mean, median, mode
+
+posmean <- (sum(Y)+a)/(n+a+b) ## closed form
+posmeadian <- qbeta(0.5,shape1 = sum(Y)+a,shape2=n-sum(Y)+b) ##not closed form solution
+posmode <- (sum(Y)+a-1)/(n+a+b-2)
+
+# fill with theoretical posterior standard deviation, IQR
+
+possd <- sqrt((a+sum(Y)*(b+n-sum(Y)))/(((n+a+b)^2)*(n+a+b+1)))
+posIQR <-  qbeta(0.75,shape1 = sum(Y)+a,shape2=n-sum(Y)+b) -  qbeta(0.25,shape1 = sum(Y)+a,shape2=n-sum(Y)+b)
+
+# fill with theoretical 95% posterior equal tail CI
+posCI95 <- c(qbeta(0.025,shape1 = sum(Y)+a,shape2=n-sum(Y)+b), qbeta(0.975,shape1 = sum(Y)+a,shape2=n-sum(Y)+b))
+posCI95 <- qbeta(c(0.025,0.975),shape1=sum(Y)+a,shape2=n-sum(Y)+b)
+
+# fill with theoretical 95% HPD CI
+posCI <- optimize(function(x){
+  ans <- qbeta(c(x,x+0.95),shape1=sum(Y)+a,shape2=n-sum(Y)+b)
+  ans[2]-ans[1]},lower = 0,upper = 0.05)$minimum
+
+posCI95.HPD <- posCI
