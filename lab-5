@@ -45,7 +45,16 @@ df <- data.frame(a,b,ans)
 df
 
 ##### QUESTION - 2 ####
+# question - 1
+bandit <- function(n1,y1,n2,y2,a,b)
+{
+  theta1 <- rbeta(1,y1+a,n1-y1+b)
+  theta2 <- rbeta(1,y2+a,n2-y2+b)
+  level <- ifelse(theta1>theta2,30,40)
+  return(level)
+}
 
+# question - 2
 
 
 
