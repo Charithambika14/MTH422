@@ -1,0 +1,53 @@
+#### LAB - 5 #####
+### QUESTION - 1 ####
+n1 <- 44700
+y1 <- 20034
+n2 <- 45489
+y2 <- 20119
+
+# y1|theta1 ~ binomial(n1,theta1)
+# y2|theta2 ~ binomial(n2,theta2)
+# y1 and y2 are independent
+# theta1 ~ beta(a,b)
+# theta2 ~ beta(a,b), theta1 and theta2 are iid
+
+# theta1|y1 ~ beta(a+y1,n1-y1+b)
+# theta2|y2 ~ beta(a+y2,n2-y2+b)
+
+# question-1
+a <- 1
+b <- 1
+theta <- seq(0.42,0.48,0.0001)
+plot(theta,dbeta(theta,y1+a,n1-y1+b),type="l",col=1)
+lines(theta,dbeta(theta,y2+a,n2-y2+b),type="l",col=2)
+legend()
+## col= 2 ==> level40, col=1 ==> level30
+
+# question-2
+# P(theta1 > theta2| y1,y2) = 
+# int_0^1 int_theta2^1 Pi(theta1|y1,y2)Pi(theta2|y1,y2) dtheta1 dtheta2
+
+theta1_samples <- rbeta(1e5,y1+a,n1-y1+b)
+theta2_samples <- rbeta(1e5,y2+a,n2-y2+b)
+mean(theta1_samples > theta2_samples)
+
+# question-3
+ans <- c(NA)
+a <- c(0.1,1,2,5,10,100,1e4)
+b <- c(0.1,1,2,5,10,100,1e4)
+for(i in 1:length(a)) 
+{
+  theta1_samples <- rbeta(1e5,y1+a,n1-y1+b)
+  theta2_samples <- rbeta(1e5,y2+a,n2-y2+b)
+  ans[i] <- mean(theta1_samples > theta2_samples)
+}
+df <- data.frame(a,b,ans)
+df
+
+##### QUESTION - 2 ####
+
+
+
+
+
+
