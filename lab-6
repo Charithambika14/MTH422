@@ -49,3 +49,21 @@ rownames(postinf_sigmasq) <- c("Posterior mean","Posterior sd")
 postinf_sigmasq
 
 # question - 3
+library(pracma)
+posterior3 <- function(data=Iris,mu_mean=0,mu_var=1e4)
+{
+  n <- nrow(data)
+  p <- ncol(data)
+  mu_mean <- rep(mu_mean,p)
+  mu_covar <- mu_var*diag(p)
+  mu_prec <- solve(mu_covar) # inverse of mu_covar
+  
+  sigma <- as.matrix(cov(data))
+  
+  mu.poscov.inv <- n*solve(sigma) + mu_prec
+  mu_poscov <- solve(mu.poscov.inv)
+  mu.posmean.part <- c(sigma %*% colSums(data) + mu_prec %*% )
+}
+
+
+INCOMPLETE
