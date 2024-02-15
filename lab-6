@@ -1,0 +1,51 @@
+library(readr)
+Iris <- read_csv("MTH422A/Iris.csv")
+
+mydir <- this.path::here()
+setwd(mydir)
+setosa <- Iris[which(Iris$Species=="Iris-setosa"),]
+versicolor <- Iris[which(Iris$Species=="Iris-versicolor"),]
+virginica <- Iris[which(Iris$Species=="Iris-virginica"),]
+
+# question - 1
+# sigma^2 is sample variance
+
+posterior1 <- function(data,mu_mean=0,mu_var=1e4)
+{
+  n <- length(data)
+  mu_posmean <- NA
+  mu_posvar <- NA
+  sigma <- var(data)
+  mu_posvar <- 1/((n/sigma)+(1/mu_var))
+  mu_posmean <- mu_posvar*((sum(data)/sigma)+(mu_mean/mu_var))
+  return(c(mu_posmean,sqrt(mu_posvar))) 
+ 
+}
+
+setosa <- as.data.frame(Iris[which(Iris$Species=="Iris-setosa"),-c(1,6)])
+postinf_mu <- round(apply(setosa,2,posterior1),4)
+rownames(postinf_mu) <- c("Posterior mean","Posterior sd")
+postinf_mu
+
+
+# question - 2
+# mean is sample mean
+
+# sigma^2 ~ inverse gamma
+posterior2 <- function(data,sigmasq.a=0.01,sigmasq.b=0.01)
+{
+  n <- length(data)
+  mu <- mean(data)
+  sigmasq_pos.a  <- sigmasq.a + n/2
+  sigmasq_pos.b <- sigmasq.b + 0.5*sum((data-mu)^2)
+  
+  sigmasq_posmean <- sigmasq_pos.b/(sigmasq_pos.a-1)
+  sigmasq_posvar <- (sigmasq_posmean^2)/(sigmasq_pos.a-2)
+  return(c(sigmasq_posmean,sqrt(sigmasq_posvar)))
+}
+
+postinf_sigmasq <- round(apply(setosa,2,posterior2),4)
+rownames(postinf_sigmasq) <- c("Posterior mean","Posterior sd")
+postinf_sigmasq
+
+# question - 3
