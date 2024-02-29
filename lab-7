@@ -8,7 +8,7 @@ library(readr)
 mydir <- this.path::here()
 setwd(mydir)
 
-# Binomial-beta case
+# BINOMIAL-BETA
 
 M <- 10 # size of binomial
 n <- 100 # sample size
@@ -58,3 +58,33 @@ qbeta(c(0.025,0.975),shape1=sum(Y)+a,shape2=M*n-sum(Y)+b)
 # Normal approximation
 
 qnorm(c(0.025,0.975),mean=theta.map,sd= 1/sqrt(theta.hess))
+
+# POISSON - GAMMA
+n <- 100 # sample size
+
+lambda.true <- 2
+
+set.seed(100)
+
+Y <- rpois(n, lambda.true)
+
+# prior setting
+
+a <- 0.1 # shape
+b <- 0.1 # rate
+
+lambda.map <- (sum(Y) + a - 1) / (n + b)
+lambda.map
+
+# need to map from (0, 1) to (0, Inf): g(x) = x / (1 - x)
+
+nll <- function(theta){
+  lambda <- theta/1-theta
+  ll <- sum(dpois(Y,lambda,log=T))+dgamma(lambda,a,b)
+  out <- -ll
+out}
+
+theta.map.numeric <- optimize(nll, interval = c(0, 1))$minimum
+
+lambda.map.numeric <- theta.map.numeric / (1 - theta.map.numeric)
+lambda.map.numeric
