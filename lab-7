@@ -1,0 +1,60 @@
+### R-MARKDOWN ######
+
+rm(list = ls())
+
+library(this.path)
+library(readr)
+
+mydir <- this.path::here()
+setwd(mydir)
+
+# Binomial-beta case
+
+M <- 10 # size of binomial
+n <- 100 # sample size
+
+theta.true <- 0.6
+
+set.seed(100)
+
+Y <- rbinom(n, M, theta.true)
+
+# prior setting
+
+a <- 0.1 # shape1
+b <- 0.1 # shape2
+
+# MAP estimator (analytically)
+
+theta.map <- (sum(Y)+a-1)/((M*n)+a+b-2)
+theta.map
+
+# MAP estimator (numerically)
+
+nll <- function(theta)
+{
+  ll <- sum(Y)*log(theta) + sum(M - Y)*log(1-theta) #sum(dbinom(Y,M,theta,log=T))
+  lp <- (a-1)*log(1-theta) + (b-1)*log(1-theta) # dbeta(theta,a,b,log=T)
+  -(ll+lp)
+}
+
+theta.map.numeric <- optimize(nll,interval = c(0,1))$minimum
+theta.map.numeric
+
+# uncertainty estimates (analytically) [can calculate by pen and paper]
+
+theta.hess <- (M*n+a+b-2)^3/((sum(Y)+a-1)*(M*n - sum(Y)+b-1))
+theta.hess
+
+# uncertainty estimates (numerically)
+
+theta.hess.numeric <- c(optimHess(theta.map.numeric, nll))
+theta.hess.numeric
+
+# true 95% CI comparison
+
+qbeta(c(0.025,0.975),shape1=sum(Y)+a,shape2=M*n-sum(Y)+b)
+
+# Normal approximation
+
+qnorm(c(0.025,0.975),mean=theta.map,sd= 1/sqrt(theta.hess))
